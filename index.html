@@ -1,21 +1,23 @@
-```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>무선 Tally 시스템 소개</title>
+  <!-- 구글 폰트 임포트 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Reset & 기본 */
+    /* Reset & 시스템 폰트 대체: Inter */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       height: 100%;
       overflow: hidden;
-      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
-      background: #f5f7fa;
-      color: #333;
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+      background: #f5f5f7;
+      color: #1d1d1f;
     }
-    /* 스크롤 스냅 설정 */
+    /* 스크롤 스냅 */
     body {
       overflow-y: scroll;
       scroll-snap-type: y mandatory;
@@ -24,24 +26,42 @@
       scroll-snap-align: start;
       min-height: 100vh;
       padding: 140px 20px 40px;
-    }
-    /* 헤더 */
-    header {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      background: #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
+    }
+    /* 부드러운 파스텔 배경 */
+    section:nth-of-type(1) { background: #FFF8E7; }
+    section:nth-of-type(2) { background: #E7F8FF; }
+    section:nth-of-type(3) { background: #F8E7FF; }
+    section:nth-of-type(4) { background: #E7FFF4; }
+    section:nth-of-type(5) { background: #F0F6FC; }
+
+    /* 고정 헤더: 3열 그리드 */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
       padding: 1rem 2rem;
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #d1d1d6;
       z-index: 10;
     }
-    header h1 {
-      font-size: 2.2rem;
+    /* 브랜드 로고 좌측 */
+    .brand {
+      font-size: 2.4rem;
       font-weight: 700;
-      color: #0078e7;
+      color: #0a84ff;
+    }
+    .brand .highlight {
+      color: #ff375f;
+    }
+    /* 중앙 네비게이션 */
+    nav {
+      justify-self: center;
     }
     nav ul {
       display: flex;
@@ -49,40 +69,42 @@
       list-style: none;
     }
     nav a {
-      color: #0078e7;
-      font-weight: 700;
+      color: #0a84ff;
+      font-weight: 600;
       font-size: 1.1rem;
     }
-    nav a:hover {
-      text-decoration: underline;
+    nav a .highlight {
+      color: #ff375f;
     }
+    nav a:hover { text-decoration: underline; }
+    /* 우측 구매 버튼 */
     .top-buy {
-      background: #e84949;
+      justify-self: end;
+      background: #ff375f;
       color: #fff;
       padding: 0.8rem 1.4rem;
-      border-radius: 4px;
+      border-radius: 8px;
       font-weight: 700;
       font-size: 1rem;
-      margin-left: 1.5rem;
+      transition: background 0.2s;
     }
-    .top-buy:hover {
-      background: #c03939;
-    }
-    /* 섹션 제목 */
+    .top-buy:hover { background: #e03150; }
+
+    /* 섹션 콘텐츠 */
     .section-content {
-      max-width: 850px;
-      margin: 0 auto;
+      max-width: 800px;
+      text-align: left;
     }
     .section-content h2 {
-      font-size: 5rem;             /* 제목 더 크게 */
+      font-size: 5.2rem;
       font-weight: 700;
-      color: #0078e7;
-      margin-bottom: 1.5em;        /* 제목과 첫 부제목 사이 띄우기 */
-      line-height: 1.2;
+      color: #0a84ff;
+      margin-bottom: 1.5em;
+      line-height: 1.1;
+      white-space: nowrap;
     }
-    /* Tally 단어 강조 */
-    .highlight {
-      color: #e84949;
+    .section-content h2 .highlight {
+      color: #ff375f;
     }
     .section-content p {
       margin-bottom: 1rem;
@@ -97,19 +119,19 @@
       font-size: 1.5rem;
     }
     .section-content h3 {
-      font-size: 3rem;             /* 부제목 더 크게 */
+      font-size: 3.2rem;
       font-weight: 700;
       margin-top: 1.5rem;
-      margin-bottom: 1.5em;        /* 부제목 간 띄우기 */
-      color: #333;
+      margin-bottom: 1.5em;
+      color: #1d1d1f;
     }
     .section-content img {
       display: block;
       max-width: 100%;
       height: auto;
       margin: 1.5rem 0;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .price-info {
       font-size: 2rem;
@@ -120,23 +142,48 @@
       text-align: center;
     }
     .buy-section .buy-button {
-      background: #e84949;
+      background: #ff375f;
       color: #fff;
       padding: 1rem 2rem;
-      border-radius: 4px;
+      border-radius: 8px;
       font-weight: 700;
       font-size: 1.5rem;
-      display: inline-block;
+      transition: background 0.2s;
     }
-    .buy-section .buy-button:hover {
-      background: #c03939;
+    .buy-section .buy-button:hover { background: #e03150; }
+
+    /* 페이지 인디케이터: 원형 시각화 */
+    #page-indicator {
+      position: fixed;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 20;
+    }
+    #page-indicator ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    #page-indicator li {
+      width: 12px;
+      height: 12px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      background: transparent;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    #page-indicator li.active {
+      background: #ff375f;
+      border-color: #ff375f;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>무선 <span class="highlight">Tally</span> 시스템</h1>
+    <div class="brand">무선 <span class="highlight">Tally</span> 시스템</div>
     <nav>
       <ul>
         <li><a href="#sec1"><span class="highlight">Tally</span>란?</a></li>
@@ -146,22 +193,21 @@
         <li><a href="#sec5">가격정보</a></li>
       </ul>
     </nav>
-    <a href="https://ko.aliexpress.com/item/1005006424630494.html"
-       class="top-buy" target="_blank">구매하기</a>
+    <a href="https://ko.aliexpress.com/item/1005006424630494.html" class="top-buy" target="_blank">구매하기</a>
   </header>
 
   <main>
     <section id="sec1">
       <div class="section-content">
-        <h2>1. 카메라 <span class="highlight">Tally</span>란?</h2>
-        <p><span class="highlight">Tally</span>는 ‘현재 방송 중인 카메라’를 시각·청각으로 알려주는 표시 장치입니다.</p>
+        <h2>What Is <span class="highlight">Tally</span>?</h2>
+        <p>Tally는 ‘현재 방송 중인 카메라’를 시각·청각으로 알려주는 표시 장치입니다.</p>
         <p>주로 카메라 상단에 장착되어, 촬영 중인 기기를 즉시 식별하게 해 줍니다.</p>
       </div>
     </section>
 
     <section id="sec2">
       <div class="section-content">
-        <h2>2. <span class="highlight">Tally</span> 장착 시 장점</h2>
+        <h2><span class="highlight">Tally</span> Benefits</h2>
         <h3>2.1 명확한 촬영 상황 인지</h3>
         <ul>
           <li><strong>즉각적인 확인:</strong> 카메라 감독이 자신이 촬영 중인 카메라인지를 바로 알 수 있어 안정적인 촬영이 가능</li>
@@ -182,7 +228,7 @@
 
     <section id="sec3">
       <div class="section-content">
-        <h2>3. <span class="highlight">Tally</span> 미장착 시 불편·위험 요소</h2>
+        <h2><span class="highlight">Tally</span> Risks</h2>
         <h3>3.1 혼란 및 스트레스 증가</h3>
         <ul>
           <li><strong>지속적 긴장:</strong> 내가 방송 중인지 아리송 → 과도한 긴장 상태 유지</li>
@@ -203,7 +249,7 @@
 
     <section id="sec4">
       <div class="section-content">
-        <h2>4. 실제 사용 예시</h2>
+        <h2>Use Case</h2>
         <h3>핸드헬드 카메라 리그</h3>
         <img src="1.png" alt="핸드헬드 카메라 리그에 장착된 수신기 및 Tally 라이트">
       </div>
@@ -211,16 +257,42 @@
 
     <section id="sec5">
       <div class="section-content">
-        <h2>5. 가격 및 구매 정보</h2>
+        <h2>Pricing</h2>
         <p class="price-info">가격: ₩1,354,673</p>
         <div class="buy-section">
           <a href="https://ko.aliexpress.com/item/1005006424630494.html"
-             class="buy-button" target="_blank">지금 구매하기</a>
+             class="buy-button" target="_blank">Buy Now</a>
         </div>
       </div>
     </section>
   </main>
 
+  <!-- 시각화된 페이지 인디케이터 -->
+  <div id="page-indicator">
+    <ul>
+      <li class="active"></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+
+  <script>
+    const sections = document.querySelectorAll('section');
+    const dots = document.querySelectorAll('#page-indicator li');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          dots.forEach(dot => dot.classList.remove('active'));
+          const idx = [...sections].indexOf(entry.target);
+          dots[idx].classList.add('active');
+        }
+      });
+    }, { threshold: 0.5 });
+
+    sections.forEach(sec => observer.observe(sec));
+  </script>
 </body>
 </html>
-```
